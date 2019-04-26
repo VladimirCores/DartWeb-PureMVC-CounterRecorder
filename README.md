@@ -1,2 +1,4 @@
-# DartWeb-PureMVC-CounterRecorder
-Experiment porting PureMVC architecture with functionality from Flutter to web
+An absolute bare-bones web app.
+
+Created from templates made available by Stagehand under a BSD-style
+[license](https://github.com/dart-lang/stagehand/blob/master/LICENSE).
