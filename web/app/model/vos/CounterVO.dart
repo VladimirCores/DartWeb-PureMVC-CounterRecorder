@@ -1,7 +1,7 @@
 class CounterVO
 {
 	int key;
-	int value = 10;
+	int value = 0;
 
 	CounterVO();
 

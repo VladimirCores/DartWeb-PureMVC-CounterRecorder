@@ -1,6 +1,7 @@
 import 'package:framework/framework.dart';
 
 import '../../../consts/commands/CounterCommand.dart';
+import '../../../consts/commands/DataCommand.dart';
 import '../../../consts/commands/HistoryCommand.dart';
 import '../../../consts/commands/NavigationCommand.dart';
 import '../Command.dart';
@@ -20,5 +21,7 @@ class PrepareControllerCommand extends SimpleCommand {
 
 		facade.registerCommand( NavigationCommand.NAVIGATE_TO_PAGE, Command.navigateToPageCommand );
 		facade.registerCommand( NavigationCommand.NAVIGATE_BACK, Command.navigateBackCommand );
+
+		facade.registerCommand( DataCommand.GET_HISTORY_DATA, Command.getHistoryDataCommand );
 	}
 }

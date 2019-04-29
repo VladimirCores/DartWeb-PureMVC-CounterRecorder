@@ -1,7 +1,5 @@
 import 'package:framework/framework.dart';
 
-import '../../consts/notification/HistoryNotification.dart';
-import '../../consts/types/CounterHistoryAction.dart';
 import 'vos/HistoryVO.dart';
 
 class HistoryProxy extends Proxy {
@@ -21,15 +19,8 @@ class HistoryProxy extends Proxy {
 
 	}
 
-	List<List<String>> getHistoryToDisplay() {
-		var result = _history.map(( HistoryVO item ) {
-			List<String> row = [];
-			row.add( item.action == CounterHistoryAction.INCREMENT ? "INCREMENT" : "DECREMENT" );
-			row.add( DateTime.fromMillisecondsSinceEpoch( item.time, isUtc: true ).toString() );
-			row.add( item.value.toString() );
-			return row;
-		})
-		.toList();
+	List<HistoryVO> getHistoryToDisplay() {
+		var result = _history.toList();
 		return result.reversed.toList();
 	}
 
@@ -41,18 +32,17 @@ class HistoryProxy extends Proxy {
 
 	void deleteHistoryItem( HistoryVO item ) {
 		_history.remove( item );
-		sendNotification( HistoryNotification.HISTORY_UPDATED, getHistoryToDisplay() );
 	}
 
 	void deleteHistoryItemsFromList( List<HistoryVO> list ) {
 		list.forEach((item) => _history.remove(item));
-		sendNotification( HistoryNotification.HISTORY_UPDATED, getHistoryToDisplay() );
 	}
 
 	int get itemsInHistory => _history.length;
 
+	HistoryVO getHistoryItemAt( int index ) => _history[ index ];
 	HistoryVO getHistoryItemAtReverseIndex( int index ) => _history[ _history.length - 1 - index ];
-	HistoryVO getLastHistoryItem() => _history.last;
+	HistoryVO getLastHistoryItem() => _history.isNotEmpty ? _history.last : null;
 
 	List<HistoryVO> getHistoryItemsUntilReverseIndex( int revertToIndex ) {
 		int lastIndex = _history.length;

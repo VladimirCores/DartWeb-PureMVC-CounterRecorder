@@ -85,16 +85,12 @@ class DatabaseProxy extends Proxy
 	void deleteItemByKey( Type type, key ) async {
 		String storeName = type.toString();
 		print(">\t DatabaseProxy -> deleteAtIndex > storeName: " + storeName);
-		print(">\t DatabaseProxy -> deleteAtIndex > key: " + key);
+		print(">\t DatabaseProxy -> deleteAtIndex > key: ${key}");
 		final txn = _idb.transaction(storeName, "readwrite");
 	  final store = txn.objectStore(storeName);
-		final cursor = await store.openCursor();
-		final cvalue = await cursor.firstWhere(( CursorWithValue cv ) {
-			return cv.key == key;
-		});
-		if (cvalue != null)
-			await cvalue.delete();
+		await store.delete(key);
 	 	await txn.completed;
+		await new Future.delayed(const Duration(seconds: 1));
 	}
 
 	Future<int> insertVO(Type type, Map<String, Object> params, {int key}) async {

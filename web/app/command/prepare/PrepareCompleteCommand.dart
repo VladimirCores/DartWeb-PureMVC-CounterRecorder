@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:framework/framework.dart';
 
-import '../../../consts/notification/HistoryNotification.dart';
 import '../../model/CounterProxy.dart';
 import '../../model/DatabaseProxy.dart';
 import '../../model/HistoryProxy.dart';
@@ -28,8 +27,6 @@ class PrepareCompleteCommand extends AsyncCommand
 
 		print("> StartupCommand -> PrepareCompleteCommand > valueVO.value = ${valueVO.value}");
 		print("> StartupCommand -> PrepareCompleteCommand > history = $history");
-
-		sendNotification( HistoryNotification.HISTORY_UPDATED, historyProxy.getHistoryToDisplay() );
 
 		commandComplete();
 	}

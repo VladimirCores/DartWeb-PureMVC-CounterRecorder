@@ -6,18 +6,29 @@ import '../../base/DomElement.dart';
 class HistoryItem extends DomElement
 {
 	final ButtonElement deleteButton = ButtonElement();
-	final DivElement counterText = Element.div();
-	final DivElement actionText = Element.div();
+	final ButtonElement restoreButton = ButtonElement();
+	final SpanElement timeText = Element.span();
+	final SpanElement valueText = Element.span();
+	final SpanElement actionText = Element.span();
 
-	HistoryItem(action, time, value) : super( null, Element.div() ) {
-		deleteButton.className = "HistoryItem_DeleteButton";
+	final key;
+
+	HistoryItem(this.key, String action, String time, String value) : super(null, Element.div() ) {
 		deleteButton.text = "delete";
-    counterText.text = value;
+		restoreButton.text = "revert";
+    timeText.text = time;
+    valueText.text = value;
     actionText.text = action;
-		this.addChild(deleteButton);
-		this.addChild(counterText);
+		valueText.className = "HistoryItem-Value";
+		actionText.className = "HistoryItem-Action";
+		timeText.className = "HistoryItem-Time";
+		this.addChild(valueText);
+		this.addChild(timeText);
 		this.addChild(actionText);
+		this.addChild(deleteButton);
+		this.addChild(restoreButton);
 	}
 
-	Stream get onNavigationBackButtonPressed => EventStreamProvider<Event>('click').forTarget(deleteButton);
+	Stream get onDeleteButtonPressed => EventStreamProvider<Event>('click').forTarget(deleteButton);
+	Stream get onRevertButtonPressed => EventStreamProvider<Event>('click').forTarget(restoreButton);
 }

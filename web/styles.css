@@ -87,3 +87,60 @@ html, body {
 .CounterButton:active {
   background-color: #3e8e41;
 }
+
+.HistoryList {
+  max-width: 600px;
+  margin: 1rem auto;
+  padding: 0.5rem;
+}
+
+.HistoryList.disabled {
+  background-color: #eee;
+  pointer-events: none;
+  user-select: none;
+}
+
+.HistoryItem {
+  display: grid;
+  grid-template-columns: 60px 1fr 1fr 60px 60px;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  justify-content: space-between;
+
+  box-sizing: border-box;
+  padding: 12px;
+  margin: 1rem;
+  border: 1px solid #999;
+  border-radius: 3px;
+  background-color: #eee;
+}
+
+.HistoryItem > * {
+  margin-right: 1rem;
+  vertical-align: middle;
+  justify-self: center;
+  align-self: center;
+}
+
+.HistoryItem > *:last-child {
+  margin: 0 0;
+}
+
+.HistoryItem-Value {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.HistoryItem-Time {
+  font-size: .75rem;
+  color: #888;
+}
+
+.HistoryItem-Action {
+  color: #01f;
+}
+
+.HistoryItem button {
+  padding: 8px;
+  border-radius: 3px;
+}

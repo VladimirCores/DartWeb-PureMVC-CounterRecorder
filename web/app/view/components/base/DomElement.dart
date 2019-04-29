@@ -7,10 +7,10 @@ abstract class DomElement {
   Element parent;
   List<DomElement> domElements;
 
-	final StreamController _onShown = StreamController.broadcast();
+	StreamController _onShown = StreamController.broadcast();
 	Stream get onShown => _onShown.stream;
 
-  final StreamController _onHidden = StreamController.broadcast();
+  StreamController _onHidden = StreamController.broadcast();
 	Stream get onHidden => _onHidden.stream;
 
   DomElement(parent, dom) {
@@ -22,8 +22,8 @@ abstract class DomElement {
 
   void addChild(element) { this.dom.children.add(element); }
   void addElement(DomElement element) {
-    element.changeParent(this.dom);
     this.domElements.add(element);
+    element.changeParent(this.dom);
   }
   void removeElement(element) {
     this.domElements.remove(element);
@@ -31,7 +31,8 @@ abstract class DomElement {
 
   void changeParent(parent) {
     this.parent = parent;
-    if (parent != null) this.show();
+    if (parent != null)
+      this.show();
   }
 
   void deselect() { /* abstract */ this.domElements.forEach((domElement) => domElement.deselect());  }
@@ -53,6 +54,10 @@ abstract class DomElement {
     if (this.dom.parentNode != null)
       this.hide();
 
+    _onShown.close();
+    _onShown = null;
+    _onHidden.close();
+    _onHidden = null;
     this.domElements = [];
     this.dom = null;
     this.parent = null;

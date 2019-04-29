@@ -15,6 +15,7 @@ dependencies:
     path: ./framework
 
 dev_dependencies:
+  intl: ^0.15.8
   build_runner: ^1.1.2
   build_web_compilers: ^1.0.0
   pedantic: ^1.0.0
