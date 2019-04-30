@@ -46,7 +46,7 @@ class PrepareCompleteCommand extends AsyncCommand
 	Future<List<HistoryVO>> RetrieveHistoryFromDatabase( DatabaseProxy databaseProxy ) async {
 		List<HistoryVO> result = List<HistoryVO>();
 		List rawValues = await databaseProxy.retrieve( HistoryVO );
-		print("> StartupCommand -> PrepareCompleteCommand > RetrieveHistoryFromDatabase : rawValues = $rawValues");
+		// print("> StartupCommand -> PrepareCompleteCommand > RetrieveHistoryFromDatabase : rawValues = $rawValues");
 		if ( rawValues.isNotEmpty )
 			rawValues.forEach((dynamic rawValue) => result.add( HistoryVO.fromRawValues( rawValue ) ));
 		return result;

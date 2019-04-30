@@ -13,6 +13,7 @@ class ApplicationMediator extends Mediator {
 	@override
 	void onRegister() {
 		print(">\t ApplicationMediator -> onRegister");
+		application.show();
 	}
 
 	@override
@@ -24,18 +25,23 @@ class ApplicationMediator extends Mediator {
 	List<String> listNotificationInterests() {
 		return [
 			ApplicationNotification.NAVIGATE_TO_PAGE
+		,	ApplicationNotification.NAVIGATE_FROM_PAGE
 		];
 	}
 
 	@override
 	void handleNotification( INotification note ) {
 		print("> ApplicationMediator -> handleNotification: note.name = ${note.getName()}");
+		final DomElement page = note.getBody();
+		print("> \t\t page = ${page}");
 		switch( note.getName() ) {
+			case ApplicationNotification.NAVIGATE_FROM_PAGE:
+				application.removeElement( page, hideFromDom: true );
+			break;
 			case ApplicationNotification.NAVIGATE_TO_PAGE:
-				final DomElement page = note.getBody();
-				application.replacePage(page);
-				application.show();
-				break;
+				application.addElement( page, appendToDom: true );
+				page.show();
+			break;
 		}
 	}
 

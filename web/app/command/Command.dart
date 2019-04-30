@@ -4,6 +4,7 @@ import 'StartupCommand.dart';
 import 'counter/DecrementCounterCommand.dart';
 import 'counter/IncrementCounterCommand.dart';
 import 'counter/UpdateCounterCommand.dart';
+import 'data/GetCounterDataCommand.dart';
 import 'data/GetHistoryDataCommand.dart';
 import 'history/DeleteCounterHistoryCommand.dart';
 import 'history/RevertCounterHistoryCommand.dart';
@@ -30,4 +31,5 @@ class Command {
 
   // Data Commands
   static ICommand getHistoryDataCommand() { return GetHistoryDataCommand(); }
+  static ICommand getCounterDataCommand() { return GetCounterDataCommand(); }
 }

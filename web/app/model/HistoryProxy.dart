@@ -5,8 +5,17 @@ import 'vos/HistoryVO.dart';
 class HistoryProxy extends Proxy {
 	static const String NAME = "HistoryProxy";
 
+	bool isLoading = false;
+
 	HistoryProxy() : super( NAME ) {
 		print(">\t HistoryProxy -> instance created");
+	}
+
+	void loadData() async {
+		isLoading = true;
+		return new Future.delayed(const Duration(seconds: 1), () {
+			isLoading = false;
+		});
 	}
 
 	@override

@@ -1,10 +1,7 @@
 class RouteVO
 {
-	int id;
-	String name;
+	final int id;
+	final String path;
 
-	RouteVO(int id, String value) {
-		this.id = id;
-		this.name = value;
-	}
+	RouteVO(this.id, this.path);
 }

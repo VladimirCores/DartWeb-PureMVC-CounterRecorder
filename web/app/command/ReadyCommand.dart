@@ -7,8 +7,8 @@ class ReadyCommand extends SimpleCommand {
 	@override
 	void execute( INotification note ) {
 		print("> StartupCommand -> ReadyCommand > note: $note");
-		sendNotification(
-			NavigationCommand.NAVIGATE_TO_PAGE, null,
-				Routes.HISTORY_SCREEN );
+
+		sendNotification( NavigationCommand.NAVIGATE_TO_PAGE, null,
+				Routes.HISTORY_PAGE );
 	}
 }

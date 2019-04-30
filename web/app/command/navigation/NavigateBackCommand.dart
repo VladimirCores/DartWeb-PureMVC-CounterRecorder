@@ -12,7 +12,7 @@ class NavigateBackCommand extends SimpleCommand {
 
 		RouteVO routeVO = navigationProxy.popFromStack();
 		print("> NavigateBackCommand -> routeVO: $routeVO");
-		var routeName = routeVO != null ? routeVO.name : Routes.DEFAULT;
+		var routeName = routeVO != null ? routeVO.path : Routes.DEFAULT;
 
 		sendNotification( NavigationCommand.NAVIGATE_TO_PAGE, true, routeName );
 	}

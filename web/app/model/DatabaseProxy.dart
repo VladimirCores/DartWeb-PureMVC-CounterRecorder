@@ -78,7 +78,7 @@ class DatabaseProxy extends Proxy
 			});
 		}
 	  await txn.completed;
-		print(">\t DatabaseProxy -> retrieve > values: " + results.toString());
+		// print(">\t DatabaseProxy -> retrieve > values: " + results.toString());
 		return results;
 	}
 

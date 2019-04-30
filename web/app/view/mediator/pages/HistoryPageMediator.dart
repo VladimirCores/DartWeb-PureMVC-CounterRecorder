@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:html';
 import 'package:intl/intl.dart';
 
@@ -20,26 +21,49 @@ class HistoryPageMediator extends Mediator {
 	HistoryPageMediator() : super( NAME );
 
 	HistoryList _historyList;
+	StreamSubscription onNavigationBackButtonPressedSubcription;
+	StreamSubscription onPageShownSubcription;
+	StreamSubscription onPageHiddenSubcription;
+	StreamSubscription onHistoryListClickSubcription;
 
 	@override
 	void onRegister() {
-		_historyScreen.onNavigationBackButtonPressed.listen(( context ) {
-			print("> HistoryPageMediator -> onNavigationBackButtonPressed");
-			_historyScreen.hide();
-			sendNotification( NavigationCommand.NAVIGATE_BACK );
-		});
+		  Stream onNavigationBackButtonPressedStream = EventStreamProvider<Event>('click')
+				.forTarget(_historyPage.navigateButton);
 
-		_historyScreen.onShown.listen(onShownHandler);
-		_historyScreen.onHidden.listen(onHiddenHandler);
+		onNavigationBackButtonPressedSubcription =
+			onNavigationBackButtonPressedStream.listen(( context ) {
+				print("> HistoryPageMediator -> onNavigationBackButtonPressed");
+				sendNotification( NavigationCommand.NAVIGATE_BACK );
+			});
+
+		onPageShownSubcription = _historyPage.onShown.listen(onShownHandler);
+		onPageHiddenSubcription = _historyPage.onHidden.listen(onHiddenHandler);
 
 		print("> HistoryPageMediator -> onRegister");
 	}
 
+	@override
+	void onRemove() {
+		print("> HistoryPageMediator -> onRemove");
+		onPageShownSubcription.cancel();
+		onPageHiddenSubcription.cancel();
+		onHistoryListClickSubcription?.cancel();
+		onNavigationBackButtonPressedSubcription.cancel();
+
+		onNavigationBackButtonPressedSubcription = null;
+		onHistoryListClickSubcription = null;
+		onPageShownSubcription = null;
+		onPageHiddenSubcription = null;
+	}
+
 	void onHiddenHandler(e) {
 		print("> HistoryPageMediator -> onHiddenHandler");
-		_historyScreen.removeElement( _historyList );
-		_historyList.dispose();
-		_historyList = null;
+		if ( _historyList != null ) {
+			_historyPage.removeElement( _historyList );
+			_historyList.dispose();
+			_historyList = null;
+		}
 	}
 
 	void onShownHandler(e) {
@@ -54,6 +78,8 @@ class HistoryPageMediator extends Mediator {
 	  ,	HistoryNotification.HISTORY_ITEM_DELETED
 	  ,	HistoryNotification.HISTORY_LOCK
 	  ,	HistoryNotification.HISTORY_UNLOCK
+	  ,	HistoryNotification.HISTORY_PRELOADER_SHOW
+	  ,	HistoryNotification.HISTORY_PRELOADER_HIDE
     ];
   }
 
@@ -61,14 +87,18 @@ class HistoryPageMediator extends Mediator {
   void handleNotification( INotification note ) {
 	  print("> HistoryPageMediator -> handleNotification: note.name = ${note.getName()}");
 		switch( note.getName() ) {
+			case HistoryNotification.HISTORY_PRELOADER_SHOW:
+				_historyPage.showPreloader(); break;
+			case HistoryNotification.HISTORY_PRELOADER_HIDE:
+				_historyPage.hidePreloader(); break;
 			case HistoryNotification.HISTORY_ITEM_DELETED:
 				if (_historyList != null) {
 					final int key = note.getBody();
-					_historyList.removeListElementByIndex(
-						_historyList.domElements.indexWhere(
-							(element) => (element as HistoryItem).key == key
-						)
+					final int index = _historyList.domElements.indexWhere(
+						(element) => (element as HistoryItem).key == key
 					);
+					if ( index > -1 )
+						_historyList.removeListElementByIndex( index );
 				}
 			break;
 			case HistoryNotification.HISTORY_LOCK:
@@ -78,47 +108,51 @@ class HistoryPageMediator extends Mediator {
 				_historyList.enabled();
 			break;
 			case HistoryNotification.HISTORY_DATA_READY:
-				_historyList = _createHistoryList( note.getBody() );
-				_historyScreen.addElement( _historyList );
+				_historyList = createHistoryList( note.getBody() );
+				_historyPage.addElement( _historyList, appendToDom: true );
+				_historyList.show();
 			break;
 		}
   }
 
-  HistoryList _createHistoryList( List<HistoryVO> data ) {
+  HistoryList createHistoryList( List<HistoryVO> data ) {
 		HistoryList result = new HistoryList();
 		HistoryItem historyItem;
 		var formatter = new DateFormat('HH:mm:ss dd/MM/y');
 	  data.asMap().forEach((index, item){
 			var dt = DateTime.fromMillisecondsSinceEpoch(item.time);
 			historyItem = new HistoryItem(
+				result.dom,
 				item.key,
 				(item.action == CounterHistoryAction.INCREMENT ? "INCREMENT" : "DECREMENT"),
 				formatter.format(dt),
 				item.value.toString()
 			);
-			historyItem.onDeleteButtonPressed.listen(
-				onHistoryItemDeleteButtonPressed);
-			historyItem.onRevertButtonPressed.listen(
-				onHistoryItemRestoreButtonPressed);
-			result.addElement(historyItem);
+			result.addElement( historyItem, appendToDom: true );
 		});
+
+		Stream onClickPressed = EventStreamProvider<Event>('click').forTarget(result.dom);
+		onHistoryListClickSubcription = onClickPressed.listen(_OnHistoryListClickListener);
 		return result;
   }
 
-	void onHistoryItemDeleteButtonPressed(e) {
-		ButtonElement button = e.target;
-		button.disabled = true;
-		int domIndex = _historyList.dom.children.indexOf(button.parentNode);
-		print("> HistoryPageMediator -> onHistoryItemDeletePressed: index = ${domIndex}");
-		sendNotification( HistoryCommand.DELETE_COUNTER_HISTORY, domIndex );
+	void _OnHistoryListClickListener(e) {
+		if (e.target is ButtonElement) switch(e.target.id) {
+			case HistoryItem.ID_BUTTON_RESTORE:
+				_processHistoryItemAction( e.target, HistoryCommand.REVERT_COUNTER_HISTORY );
+			break;
+			case HistoryItem.ID_BUTTON_DELETE:
+				_processHistoryItemAction( e.target, HistoryCommand.DELETE_COUNTER_HISTORY );
+			break;
+		}
 	}
 
-	void onHistoryItemRestoreButtonPressed(e) {
-		ButtonElement button = e.target;
-		int index = _historyList.dom.children.indexOf(button.parentNode);
-		print("> HistoryPageMediator -> onHistoryItemDeletePressed: state = ${e.target} : index = ${index}");
-		sendNotification( HistoryCommand.REVERT_COUNTER_HISTORY, index );
+	void _processHistoryItemAction( ButtonElement button, action ) {
+		int index = _historyList.getChildIndex( button.parentNode );
+		HistoryItem historyItem = _historyList.domElements[ index ];
+		historyItem.lock();
+		sendNotification( action, index );
 	}
 
-	HistoryPage get _historyScreen => getViewComponent() as HistoryPage;
+	HistoryPage get _historyPage => getViewComponent() as HistoryPage;
 }

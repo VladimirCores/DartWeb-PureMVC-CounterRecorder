@@ -1,7 +1,11 @@
+import 'dart:async';
+import 'dart:html';
+
 import 'package:framework/framework.dart';
 
 import '../../../../consts/Routes.dart';
 import '../../../../consts/commands/CounterCommand.dart';
+import '../../../../consts/commands/DataCommand.dart';
 import '../../../../consts/commands/HistoryCommand.dart';
 import '../../../../consts/commands/NavigationCommand.dart';
 import '../../../../consts/notification/CounterNotification.dart';
@@ -17,28 +21,48 @@ class HomePageMediator extends Mediator
 
 	HomePageMediator() : super( NAME );
 
+	StreamSubscription onIncrementButtonPressedSubcription;
+	StreamSubscription onDecrementButtonPressedSubcription;
+	StreamSubscription onNavigateHistoryButtonSubcription;
+
 	@override
 	void onRegister() {
 		print("> HomePageMediator -> onRegister");
-		_homeScreen.onIncrementButtonPressed.listen((time) {
+
+		Stream onIncrementButtonPressed = EventStreamProvider<Event>('click').forTarget(_homePage.plusButton);
+		Stream onDecrementButtonPressed = EventStreamProvider<Event>('click').forTarget(_homePage.minusButton);
+		Stream onNavigateHistoryButtonPressed = EventStreamProvider<Event>('click').forTarget(_homePage.navigateButton);
+
+		onIncrementButtonPressedSubcription = onIncrementButtonPressed.listen((time) {
 			print("> HomePageMediator -> onIncrementButtonPressed");
 			sendNotification( CounterCommand.INCREMENT );
 			sendNotification( HistoryCommand.SAVE_COUNTER_HISTORY, CounterHistoryAction.INCREMENT );
 		});
-		_homeScreen.onDecrementButtonPressed.listen((time) {
+		onDecrementButtonPressedSubcription = onDecrementButtonPressed.listen((time) {
 			print("> HomePageMediator -> onDecrementButtonPressed");
 			sendNotification( CounterCommand.DECREMENT );
 			sendNotification( HistoryCommand.SAVE_COUNTER_HISTORY, CounterHistoryAction.DECREMENT );
 		});
-		_homeScreen.onNavigateHistoryButtonPressed.listen((event) {
+		onNavigateHistoryButtonSubcription = onNavigateHistoryButtonPressed.listen((event) {
 			print("> HomePageMediator -> onNavigateHistoryButtonPressed");
-			sendNotification( NavigationCommand.NAVIGATE_TO_PAGE, false, Routes.HISTORY_SCREEN );
+			sendNotification( NavigationCommand.NAVIGATE_TO_PAGE, false, Routes.HISTORY_PAGE );
 		});
+
+		this.sendNotification( DataCommand.GET_COUNTER_DATA );
 	}
 
 	@override
 	void onRemove() {
+		print("> HomePageMediator -> onRemove");
 
+		onIncrementButtonPressedSubcription.cancel();
+		onIncrementButtonPressedSubcription = null;
+
+		onDecrementButtonPressedSubcription.cancel();
+		onDecrementButtonPressedSubcription = null;
+
+		onNavigateHistoryButtonSubcription.cancel();
+		onNavigateHistoryButtonSubcription = null;
 	}
 
 	@override
@@ -55,9 +79,9 @@ class HomePageMediator extends Mediator
 		switch( note.getName() ) {
 			case CounterNotification.COUNTER_VALUE_UPDATED:
 				CounterVO valueVO = note.getBody();
-				_homeScreen.setCounter( valueVO.value );
+				_homePage.setCounter( valueVO.value );
 		}
   }
 
-	HomePage get _homeScreen => getViewComponent() as HomePage;
+	HomePage get _homePage => getViewComponent() as HomePage;
 }

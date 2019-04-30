@@ -23,5 +23,6 @@ class PrepareControllerCommand extends SimpleCommand {
 		facade.registerCommand( NavigationCommand.NAVIGATE_BACK, Command.navigateBackCommand );
 
 		facade.registerCommand( DataCommand.GET_HISTORY_DATA, Command.getHistoryDataCommand );
+		facade.registerCommand( DataCommand.GET_COUNTER_DATA, Command.getCounterDataCommand );
 	}
 }

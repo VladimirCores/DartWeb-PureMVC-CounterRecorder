@@ -1,5 +1,7 @@
 import 'package:framework/framework.dart';
 
+import '../../../consts/Routes.dart';
+import '../../model/NavigationProxy.dart';
 import '../../view/components/Application.dart';
 import '../../view/components/pages/HistoryPage.dart';
 import '../../view/components/pages/HomePage.dart';
@@ -12,33 +14,24 @@ class PrepareViewCommand extends SimpleCommand {
   void execute( INotification note ) {
     print("> StartupCommand -> PrepareViewCommand > note: $note");
 
+    final NavigationProxy navigationProxy = facade.retrieveProxy( NavigationProxy.NAME );
+
     final ApplicationMediator applicationMediator = ApplicationMediator();
-    final HomePageMediator homeScreenMediator = HomePageMediator();
-    final HistoryPageMediator historyScreenMediator = HistoryPageMediator();
+    final HomePageMediator homePageMediator = HomePageMediator();
+    final HistoryPageMediator historyPageMediator = HistoryPageMediator();
+
+    final Application application = note.getBody() as Application;
 
     final HomePage homeScreen = HomePage();
     final HistoryPage historyScreen = HistoryPage();
 
-    final Application application = note.getBody() as Application;
-// = new Application(
-//      observers: <NavigatorObserver>[
-//      	homeScreen.routeObserver
-//	    , historyScreen.routeObserver
-//      ],
-//		  routes: {
-//			  Routes.HOME_SCREEN: ( BuildContext context ) => homeScreen,
-//			  Routes.LOGIN_SCREEN: ( BuildContext context ) => loginScreen,
-//			  Routes.HISTORY_SCREEN: ( BuildContext context ) => historyScreen,
-//		  },
-//		  initialRoute: Routes.HOME_SCREEN
-//	  );
-
     applicationMediator.setViewComponent( application );
-    homeScreenMediator.setViewComponent( homeScreen );
-    historyScreenMediator.setViewComponent( historyScreen );
+    homePageMediator.setViewComponent( homeScreen );
+    historyPageMediator.setViewComponent( historyScreen );
+
+    navigationProxy.registerPageMediator( Routes.HOME_PAGE, homePageMediator );
+    navigationProxy.registerPageMediator( Routes.HISTORY_PAGE, historyPageMediator );
 
     facade.registerMediator( applicationMediator );
-    facade.registerMediator( homeScreenMediator );
-    facade.registerMediator( historyScreenMediator );
   }
 }

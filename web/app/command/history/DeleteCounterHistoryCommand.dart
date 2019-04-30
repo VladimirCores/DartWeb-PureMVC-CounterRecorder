@@ -16,6 +16,7 @@ class DeleteCounterHistoryCommand extends SimpleCommand {
 
 		print("> DeleteCounterHistoryCommand > index: $index");
 		print("> DeleteCounterHistoryCommand > historyVO.key: ${historyVO.key}");
+		await new Future.delayed(const Duration(seconds: 2));
 		await databaseProxy.deleteItemByKey( HistoryVO, historyVO.key );
 
 		historyProxy.deleteHistoryItem( historyVO );

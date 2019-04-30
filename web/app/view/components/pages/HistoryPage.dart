@@ -1,25 +1,29 @@
-import 'dart:async';
 import 'dart:html';
 
 import '../base/DomElement.dart';
+import 'history/HistoryPreloader.dart';
 
 class HistoryPage extends DomElement
 {
 	final ButtonElement navigateButton = ButtonElement();
 
+	HistoryPreloader _historyPreloader;
+
 	HistoryPage() : super( null, Element.div() ) {
 		navigateButton.className = "NavigateButton NavigateBackButton";
 		navigateButton.text = "< BACK";
-
-		this.addChild(navigateButton);
+		this.addDOMChild(navigateButton);
 	}
 
-	final StreamController _revertHistoryItemConfirmed = StreamController.broadcast();
-
-	Stream get onNavigationBackButtonPressed => EventStreamProvider<Event>('click').forTarget(navigateButton);
-	Stream get onRevertHistoryItemButtonPressed => _revertHistoryItemConfirmed.stream;
-
   void showPreloader() {
+		if ( _historyPreloader != null ) hidePreloader();
+		_historyPreloader = new HistoryPreloader( this.dom );
+		this.addElement( _historyPreloader, appendToDom: true );
+	}
 
+	void hidePreloader() {
+		this.removeElement( _historyPreloader );
+		_historyPreloader.dispose();
+		_historyPreloader = null;
 	}
 }
