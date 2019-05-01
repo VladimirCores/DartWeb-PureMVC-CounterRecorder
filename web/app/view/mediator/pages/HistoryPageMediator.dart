@@ -34,8 +34,8 @@ class HistoryPageMediator extends Mediator {
 		onPageHiddenSubcription = _historyPage.onHidden.listen(onHiddenHandler);
 
 		var historyList = HistoryList();
-		this.facade.registerMediator( HistoryListMediator( historyList ));
 		_historyPage.addElement( historyList, appendToDom: true );
+		this.facade.registerMediator( HistoryListMediator( historyList ));
 
 		print("> HistoryPageMediator -> onRegister");
 	}
@@ -51,6 +51,8 @@ class HistoryPageMediator extends Mediator {
 		onPageShownSubcription = null;
 		onPageHiddenSubcription = null;
 
+		var historyListMediator = this.facade.retrieveMediator( HistoryListMediator.NAME );
+		_historyPage.removeElement( historyListMediator.getViewComponent(), hideFromDom: true );
 		this.facade.removeMediator( HistoryListMediator.NAME );
 	}
 

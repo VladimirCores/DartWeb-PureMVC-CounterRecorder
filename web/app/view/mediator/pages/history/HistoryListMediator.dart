@@ -34,7 +34,7 @@ class HistoryListMediator extends Mediator {
 		onHistoryListClickSubcription?.cancel();
 		onHistoryListClickSubcription = null;
 		_historyList.dispose();
-		setViewComponent(null);
+		setViewComponent( null );
 	}
 
 	@override
