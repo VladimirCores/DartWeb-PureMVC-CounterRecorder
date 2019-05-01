@@ -16,13 +16,15 @@ class HistoryListMediator extends Mediator {
 
 	static const String NAME = "HistoryListMediator";
 
-	HistoryListMediator() : super( NAME );
+	HistoryListMediator( view ) : super( NAME, view );
 
 	StreamSubscription onHistoryListClickSubcription;
 
 	@override
 	void onRegister() {
 		print("> HistoryListMediator -> onRegister");
+		Stream onClickPressed = EventStreamProvider<Event>('click').forTarget(_historyList.dom);
+		onHistoryListClickSubcription = onClickPressed.listen(_OnHistoryListClickListener);
 		sendNotification( DataCommand.GET_HISTORY_DATA );
 	}
 
@@ -32,6 +34,7 @@ class HistoryListMediator extends Mediator {
 		onHistoryListClickSubcription?.cancel();
 		onHistoryListClickSubcription = null;
 		_historyList.dispose();
+		setViewComponent(null);
 	}
 
 	@override
@@ -46,7 +49,7 @@ class HistoryListMediator extends Mediator {
 
   @override
   void handleNotification( INotification note ) {
-	  print("> HistoryPageMediator -> handleNotification: note.name = ${note.getName()}");
+	  print("> HistoryListMediator -> handleNotification: note.name = ${note.getName()}");
 		switch( note.getName() ) {
 			case HistoryNotification.HISTORY_ITEM_DELETED:
 				final int key = note.getBody();
@@ -69,25 +72,20 @@ class HistoryListMediator extends Mediator {
 		}
   }
 
-  HistoryList appendHistoryItems( List<HistoryVO> data ) {
-		HistoryList result = new HistoryList();
+  void appendHistoryItems( List<HistoryVO> data ) {
 		HistoryItem historyItem;
 		var formatter = new DateFormat('HH:mm:ss dd/MM/y');
 	  data.asMap().forEach((index, item){
 			var dt = DateTime.fromMillisecondsSinceEpoch(item.time);
 			historyItem = new HistoryItem(
-				result.dom,
+				_historyList.dom,
 				item.key,
 				(item.action == CounterHistoryAction.INCREMENT ? "INCREMENT" : "DECREMENT"),
 				formatter.format(dt),
 				item.value.toString()
 			);
-			result.addElement( historyItem, appendToDom: true );
+			_historyList.addElement( historyItem, appendToDom: true );
 		});
-
-		Stream onClickPressed = EventStreamProvider<Event>('click').forTarget(result.dom);
-		onHistoryListClickSubcription = onClickPressed.listen(_OnHistoryListClickListener);
-		return result;
   }
 
 	void _OnHistoryListClickListener(e) {

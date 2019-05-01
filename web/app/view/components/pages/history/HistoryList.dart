@@ -10,12 +10,12 @@ class HistoryList extends DomElement
 
 	void removeListElementByIndex(int value) {
 		DomElement element = this.domElements[ value ];
-		this.removeElement(element);
+		this.removeElement( element );
 		element.dispose();
 	}
 
-	int getChildIndex(node) {
-		return this.dom.children.indexOf(node);
+	int getChildIndex( node ) {
+		return this.dom.children.indexOf( node );
 	}
 
   void disable() {
@@ -23,6 +23,7 @@ class HistoryList extends DomElement
 	}
 
   void enabled() {
-		this.dom.className = this.dom.className.replaceFirst(_DISABLED_CLASS_NAME, '');
+		var cn = this.dom.className;
+		this.dom.className = cn.replaceFirst(_DISABLED_CLASS_NAME, '');
 	}
 }

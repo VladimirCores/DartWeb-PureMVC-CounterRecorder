@@ -26,7 +26,7 @@ class PrepareCompleteCommand extends AsyncCommand
 		historyProxy.setData( history );
 
 		print("> StartupCommand -> PrepareCompleteCommand > valueVO.value = ${valueVO.value}");
-		print("> StartupCommand -> PrepareCompleteCommand > history = $history");
+		print("> StartupCommand -> PrepareCompleteCommand > history.length = ${history.length}");
 
 		commandComplete();
 	}

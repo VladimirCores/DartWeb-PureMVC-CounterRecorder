@@ -119,7 +119,7 @@ html, body {
 }
 
 .HistoryList.disabled {
-  background-color: #eee;
+  background-color: #fca;
   pointer-events: none;
   user-select: none;
 }
