@@ -15,12 +15,12 @@ class PrepareViewCommand extends SimpleCommand {
     print("> StartupCommand -> PrepareViewCommand > note: $note");
 
     final NavigationProxy navigationProxy = facade.retrieveProxy( NavigationProxy.NAME );
+    final ApplicationMediator applicationMediator = facade.retrieveMediator( ApplicationMediator.NAME );
 
-    final ApplicationMediator applicationMediator = ApplicationMediator();
     final HomePageMediator homePageMediator = HomePageMediator();
     final HistoryPageMediator historyPageMediator = HistoryPageMediator();
 
-    final Application application = note.getBody() as Application;
+    final Application application = applicationMediator.getViewComponent() as Application;
 
     final HomePage homeScreen = HomePage();
     final HistoryPage historyScreen = HistoryPage();

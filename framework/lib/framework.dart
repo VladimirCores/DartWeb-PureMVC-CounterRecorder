@@ -91,3 +91,17 @@ part 'src/patterns/facade/Facade.dart';
 part 'src/core/Model.dart';
 part 'src/core/View.dart';
 part 'src/core/Controller.dart';
+
+part 'src/modules/pipes/PipeAwareModule.dart';
+part 'src/modules/pipes/JunctionMediator.dart';
+part 'src/modules/pipes/pipe/Pipe.dart';
+part 'src/modules/pipes/pipe/MergePipe.dart';
+part 'src/modules/pipes/pipe/SplitPipe.dart';
+part 'src/modules/pipes/pipe/PipeListener.dart';
+part 'src/modules/pipes/message/Message.dart';
+part 'src/modules/pipes/message/FilterControlMessage.dart';
+part 'src/modules/pipes/plumbing/Filter.dart';
+part 'src/modules/pipes/plumbing/Junction.dart';
+part 'src/modules/pipes/interfaces/IPipeMessage.dart';
+part 'src/modules/pipes/interfaces/IPipeFitting.dart';
+part 'src/modules/pipes/interfaces/IPipeAware.dart';

@@ -4,6 +4,7 @@ import 'ReadyCommand.dart';
 import 'prepare/PrepareCompleteCommand.dart';
 import 'prepare/PrepareControllerCommand.dart';
 import 'prepare/PrepareModelCommand.dart';
+import 'prepare/PrepareModulesCommand.dart';
 import 'prepare/PrepareViewCommand.dart';
 
 class StartupCommand extends AsyncMacroCommand {
@@ -12,6 +13,7 @@ class StartupCommand extends AsyncMacroCommand {
   StartupCommand() {
     addSubCommands([
 	    () => PrepareModelCommand(),
+	    () => PrepareModulesCommand(),
 	    () => PrepareControllerCommand(),
 	    () => PrepareViewCommand(),
 
@@ -19,7 +21,7 @@ class StartupCommand extends AsyncMacroCommand {
 	    () => ReadyCommand()
     ]);
   }
-  
+
   @override
   void execute( INotification note ) {
     print( "> StartupCommand -> note : $note" );

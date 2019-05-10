@@ -8,7 +8,7 @@ class ApplicationMediator extends Mediator {
 
 	static const String NAME = "ApplicationMediator";
 
-	ApplicationMediator() : super( NAME );
+	ApplicationMediator( Application view ) : super( NAME, view );
 
 	@override
 	void onRegister() {
