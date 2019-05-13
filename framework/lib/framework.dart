@@ -1,5 +1,7 @@
 library framework;
 
+import 'dart:core';
+
 /**
  * The PureMVC MultiCore Framework for Dart.
  *
@@ -99,7 +101,10 @@ part 'src/modules/pipes/pipe/MergePipe.dart';
 part 'src/modules/pipes/pipe/SplitPipe.dart';
 part 'src/modules/pipes/pipe/PipeListener.dart';
 part 'src/modules/pipes/message/Message.dart';
-part 'src/modules/pipes/message/FilterControlMessage.dart';
+part 'src/modules/pipes/message/ModuleMessage.dart';
+part 'src/modules/pipes/message/RequestMessage.dart';
+part 'src/modules/pipes/message/CallbackMessage.dart';
+part 'src/modules/pipes/message/FilterMessage.dart';
 part 'src/modules/pipes/plumbing/Filter.dart';
 part 'src/modules/pipes/plumbing/Junction.dart';
 part 'src/modules/pipes/interfaces/IPipeMessage.dart';

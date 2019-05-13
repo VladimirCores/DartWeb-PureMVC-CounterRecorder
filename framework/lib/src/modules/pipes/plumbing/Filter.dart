@@ -79,7 +79,7 @@ class Filter extends Pipe
 		{
 			case  Message.WORKER:
 			case  Message.NORMAL:
-				if ( mode == FilterControlMessage.FILTER ) {
+				if ( mode == FilterMessage.FILTER ) {
 					outputMessage = applyFilter( message );
 				}
 //					print("> FILTER\t\t : Output:", output);
@@ -88,18 +88,18 @@ class Filter extends Pipe
 			break;
 
 			// Accept parameters from control message
-			case FilterControlMessage.SET_PARAMS:
+			case FilterMessage.SET_PARAMS:
 				if ( isTarget( message )) {
-					setParams(( message as FilterControlMessage ).getParams() );
+					setParams(( message as FilterMessage ).getParams() );
 				} else {
 					success = output.write( outputMessage );
 				}
 				break;
 
 			// Accept filter function from control message
-			case FilterControlMessage.SET_FILTER:
+			case FilterMessage.SET_FILTER:
 				if ( isTarget( message )){
-					setFilter(( message as FilterControlMessage ).getFilter() );
+					setFilter(( message as FilterMessage ).getFilter() );
 				} else {
 					success = output.write( outputMessage );
 				}
@@ -107,10 +107,10 @@ class Filter extends Pipe
 				break;
 
 			// Toggle between Filter or Bypass operational modes
-			case FilterControlMessage.BYPASS:
-			case FilterControlMessage.FILTER:
+			case FilterMessage.BYPASS:
+			case FilterMessage.FILTER:
 				if ( isTarget( message )) {
-					mode = ( message as FilterControlMessage ).getType();
+					mode = ( message as FilterMessage ).getType();
 				} else {
 					success = output.write( outputMessage );
 				}
@@ -128,7 +128,7 @@ class Filter extends Pipe
 	 */
 	bool isTarget( IPipeMessage m )
 	{
-		return (( m as FilterControlMessage ).getName() == this.name );
+		return (( m as FilterMessage ).getName() == this.name );
 	}
 
 	/**
@@ -168,7 +168,7 @@ class Filter extends Pipe
 		return filter( message, params );
 	}
 
-	String mode = FilterControlMessage.FILTER;
+	String mode = FilterMessage.FILTER;
   Function filter = (IPipeMessage message, Object params) => null;
 	Object params = {};
 	String name;

@@ -1,6 +1,6 @@
 part of framework;
 
-class FilterControlMessage extends Message
+class FilterMessage extends Message
 {
 	static const String BASE  	= Message.BASE+'filter-control/';
 
@@ -9,9 +9,8 @@ class FilterControlMessage extends Message
 	static const String BYPASS = BASE+'bypass';
 	static const String FILTER = BASE+'filter';
 
-
 	// Constructor
-	FilterControlMessage( String type, String name, [ Function filter, Object params ]):super( type )
+	FilterMessage( String type, String name, [ Function filter, Object params ]):super( type )
 	{
 		setName( name );
 		setFilter( filter );

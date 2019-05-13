@@ -12,6 +12,8 @@ class JunctionMediator extends Mediator
 	 */
   static const String ACCEPT_OUTPUT_PIPE 	= 'acceptOutputPipe';
 
+	Map<String, Object> _resolvers = Map<String, Object>();
+
 	/**
 	 * Constructor.
 	 */
@@ -84,6 +86,55 @@ class JunctionMediator extends Mediator
 				}
 				break;
 		}
+		NotificationProcessor( note );
+	}
+
+	void NotificationProcessor( INotification note ) {
+	//==================================================================================================
+		bool isRequestCallbackMessage = note.getBody() is CallbackMessage;
+ 		Function messageProcessor = isRequestCallbackMessage ?
+			CreateResolverForMessage : null;
+//	(note.getBody() is CallbackRequestMessage)
+//	? 	CreateWorkerRequestFromDataProcessorMessage
+//			: 	CreateWorkerRequestMessage;
+//		junction.sendMessage( WorkerModule.TO_WRK, messageProcessor(
+//				nName, nBody, nType
+//				) as WorkerRequestMessage);
+	}
+
+	//==================================================================================================
+	RequestMessage CreateResolverForMessage( String request, CallbackMessage input, String responseNotification ) {
+	//==================================================================================================
+		input.setRequest( request );
+
+		bool isResponseNotificationExist = responseNotification != null;
+		bool isInputHasCallback = input.callback != null;
+
+		if ( isResponseNotificationExist || isInputHasCallback ) {
+			String messageID = input.getMessageID();
+			_resolvers[ messageID ] = CreateResponseResolver(
+				input.callback, messageID, responseNotification);
+		}
+
+		return input;
+	}
+
+	//==================================================================================================
+	Function CreateResponseResolver( Function callback, String messageID, String response ) {
+	//==================================================================================================
+		return ([ Object data ])
+		{
+			print("> ApplicationJunctionMediator -> ResolverFunction response = ${response}");
+			print("> ApplicationJunctionMediator -> ResolverFunction callback = ${callback}");
+
+			if ( callback != null ) {
+				_resolvers.remove( messageID );
+				Function.apply( callback, [ data ]);
+			}
+
+			if ( response != null )
+				sendNotification( response, data );
+		};
 	}
 
 	void AddPipeToOutputChannel( IPipeFitting outputPipe, String channelName )
