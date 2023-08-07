@@ -13,15 +13,16 @@ class RevertCounterHistoryCommand extends SimpleCommand {
     final databaseProxy = facade.retrieveProxy(DatabaseProxy.NAME) as DatabaseProxy;
 
     int itemsInHistory = historyProxy.itemsInHistory;
-    int revertToIndex = itemsInHistory - (note.getBody() as int) - 1;
+    int indexToRevert = note.getBody() as int;
+    int revertToIndex = itemsInHistory - indexToRevert;
     int counter = itemsInHistory;
 
     sendNotification(HistoryNotification.HISTORY_LOCK);
 
     print("> RevertCounterHistoryCommand > revertToIndex: $revertToIndex");
     print("> RevertCounterHistoryCommand > itemsInHistory: $itemsInHistory");
-    while (counter > revertToIndex) {
-      print("> RevertCounterHistoryCommand > counter: ${counter--}");
+    while (counter-- >= revertToIndex) {
+      print("> RevertCounterHistoryCommand > counter: ${counter}");
       HistoryVO historyVO = historyProxy.getHistoryItemAt(counter);
       print("> RevertCounterHistoryCommand > value: ${historyVO.value}");
       await databaseProxy.deleteItemByKey(HistoryVO, historyVO.key);

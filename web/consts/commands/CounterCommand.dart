@@ -1,6 +1,5 @@
 class CounterCommand {
-	static const String
-		UPDATE      = "command_coutner_update",
-		INCREMENT   = "command_coutner_increment",
-		DECREMENT   = "command_coutner_decrement";
+  static const String UPDATE = "command_counter_update",
+      INCREMENT = "command_counter_increment",
+      DECREMENT = "command_counter_decrement";
 }

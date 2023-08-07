@@ -1,3 +1,1 @@
-class PrepareCommands {
-
-}
+class PrepareCommands {}
