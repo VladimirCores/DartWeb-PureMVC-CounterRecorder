@@ -7,25 +7,25 @@ import '../../model/HistoryProxy.dart';
 import '../../model/vos/HistoryVO.dart';
 
 class DeleteCounterHistoryCommand extends SimpleCommand {
-	@override
-	void execute( INotification note ) async {
-		final int index = note.getBody();
-		final DatabaseProxy databaseProxy = facade.retrieveProxy( DatabaseProxy.NAME );
-		final HistoryProxy historyProxy = facade.retrieveProxy( HistoryProxy.NAME );
-		final HistoryVO historyVO = historyProxy.getHistoryItemAtReverseIndex( index );
+  @override
+  void execute(INotification note) async {
+    final int index = note.getBody();
+    final databaseProxy = facade.retrieveProxy(DatabaseProxy.NAME) as DatabaseProxy;
+    final historyProxy = facade.retrieveProxy(HistoryProxy.NAME) as HistoryProxy;
+    final HistoryVO historyVO = historyProxy.getHistoryItemAtReverseIndex(index);
 
-		print("> DeleteCounterHistoryCommand > index: $index");
-		print("> DeleteCounterHistoryCommand > historyVO.key: ${historyVO.key}");
-		await new Future.delayed(const Duration(seconds: 2));
-		await databaseProxy.deleteItemByKey( HistoryVO, historyVO.key );
+    print("> DeleteCounterHistoryCommand > index: $index");
+    print("> DeleteCounterHistoryCommand > historyVO.key: ${historyVO.key}");
+    await Future.delayed(const Duration(seconds: 2));
+    await databaseProxy.deleteItemByKey(HistoryVO, historyVO.key);
 
-		historyProxy.deleteHistoryItem( historyVO );
+    historyProxy.deleteHistoryItem(historyVO);
 
-		sendNotification( HistoryNotification.HISTORY_ITEM_DELETED, historyVO.key );
+    sendNotification(HistoryNotification.HISTORY_ITEM_DELETED, historyVO.key);
 
-		if( index == 0 ) {
-			final counterUpdateValue = historyProxy.itemsInHistory > 0 ? historyProxy.getLastHistoryItem().value : 0;
-			sendNotification( CounterCommand.UPDATE, counterUpdateValue );
-		}
-	}
+    if (index == 0) {
+      final counterUpdateValue = historyProxy.itemsInHistory > 0 ? historyProxy.getLastHistoryItem()!.value : 0;
+      sendNotification(CounterCommand.UPDATE, counterUpdateValue);
+    }
+  }
 }

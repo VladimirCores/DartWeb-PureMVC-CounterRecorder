@@ -11,18 +11,17 @@ class StartupCommand extends AsyncMacroCommand {
 
   StartupCommand() {
     addSubCommands([
-	    () => PrepareModelCommand(),
-	    () => PrepareControllerCommand(),
-	    () => PrepareViewCommand(),
-
-	    () => PrepareCompleteCommand(),
-	    () => ReadyCommand()
+      () => PrepareModelCommand(),
+      () => PrepareControllerCommand(),
+      () => PrepareViewCommand(),
+      () => PrepareCompleteCommand(),
+      () => ReadyCommand()
     ]);
   }
-  
+
   @override
-  void execute( INotification note ) {
-    print( "> StartupCommand -> note : $note" );
-    super.execute( note );
+  void execute(INotification note) {
+    print("> StartupCommand -> note : $note");
+    super.execute(note);
   }
 }

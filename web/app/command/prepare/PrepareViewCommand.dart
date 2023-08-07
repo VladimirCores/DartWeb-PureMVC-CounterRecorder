@@ -11,10 +11,10 @@ import '../../view/mediator/pages/HomePageMediator.dart';
 
 class PrepareViewCommand extends SimpleCommand {
   @override
-  void execute( INotification note ) {
+  void execute(INotification note) {
     print("> StartupCommand -> PrepareViewCommand > note: $note");
 
-    final NavigationProxy navigationProxy = facade.retrieveProxy( NavigationProxy.NAME );
+    final navigationProxy = facade.retrieveProxy(NavigationProxy.NAME) as NavigationProxy;
 
     final ApplicationMediator applicationMediator = ApplicationMediator();
     final HomePageMediator homePageMediator = HomePageMediator();
@@ -25,13 +25,13 @@ class PrepareViewCommand extends SimpleCommand {
     final HomePage homeScreen = HomePage();
     final HistoryPage historyScreen = HistoryPage();
 
-    applicationMediator.setViewComponent( application );
-    homePageMediator.setViewComponent( homeScreen );
-    historyPageMediator.setViewComponent( historyScreen );
+    applicationMediator.setViewComponent(application);
+    homePageMediator.setViewComponent(homeScreen);
+    historyPageMediator.setViewComponent(historyScreen);
 
-    navigationProxy.registerPageMediator( Routes.HOME_PAGE, homePageMediator );
-    navigationProxy.registerPageMediator( Routes.HISTORY_PAGE, historyPageMediator );
+    navigationProxy.registerPageMediator(Routes.HOME_PAGE, homePageMediator);
+    navigationProxy.registerPageMediator(Routes.HISTORY_PAGE, historyPageMediator);
 
-    facade.registerMediator( applicationMediator );
+    facade.registerMediator(applicationMediator);
   }
 }

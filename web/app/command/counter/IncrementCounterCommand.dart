@@ -5,14 +5,14 @@ import '../../model/CounterProxy.dart';
 import '../../model/vos/CounterVO.dart';
 
 class IncrementCounterCommand extends SimpleCommand {
-	@override
-	void execute( INotification note ) async {
-		print("> IncrementCounterCommand > note: $note");
+  @override
+  void execute(INotification note) async {
+    print("> IncrementCounterCommand > note: $note");
 
-		final CounterProxy counterProxy = facade.retrieveProxy( CounterProxy.NAME );
-		final CounterVO counterVO = counterProxy.getData();
+    final counterProxy = facade.retrieveProxy(CounterProxy.NAME) as CounterProxy;
+    final CounterVO counterVO = counterProxy.getData();
 
-		final nextValue = counterVO.value + 1;
-		this.sendNotification( CounterCommand.UPDATE, nextValue );
-	}
+    final nextValue = counterVO.value + 1;
+    this.sendNotification(CounterCommand.UPDATE, nextValue);
+  }
 }

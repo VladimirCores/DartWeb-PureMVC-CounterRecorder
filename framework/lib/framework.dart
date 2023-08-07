@@ -67,6 +67,8 @@ library framework;
  *
  */
 
+import 'package:meta/meta.dart';
+
 part 'src/interfaces/IAsyncCommand.dart';
 part 'src/interfaces/ICommand.dart';
 part 'src/interfaces/INotifier.dart';
@@ -91,3 +93,4 @@ part 'src/patterns/facade/Facade.dart';
 part 'src/core/Model.dart';
 part 'src/core/View.dart';
 part 'src/core/Controller.dart';
+part 'src/inject/Injector.dart';

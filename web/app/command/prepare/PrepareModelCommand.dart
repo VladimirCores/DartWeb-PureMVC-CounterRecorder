@@ -19,13 +19,13 @@ class PrepareModelCommand extends AsyncCommand {
     final historyProxy = HistoryProxy();
     final navigationProxy = NavigationProxy();
 
-    facade.registerProxy( applicationProxy );
-    facade.registerProxy( databaseProxy );
-    facade.registerProxy( counterProxy );
-    facade.registerProxy( historyProxy );
-    facade.registerProxy( navigationProxy );
+    facade.registerProxy(applicationProxy);
+    facade.registerProxy(databaseProxy);
+    facade.registerProxy(counterProxy);
+    facade.registerProxy(historyProxy);
+    facade.registerProxy(navigationProxy);
 
-    await databaseProxy.init([ CounterVO, HistoryVO ]);
+    await databaseProxy.init([CounterVO, HistoryVO]);
 
     commandComplete();
   }

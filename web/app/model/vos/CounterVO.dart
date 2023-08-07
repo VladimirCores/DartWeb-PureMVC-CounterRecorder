@@ -1,16 +1,15 @@
-class CounterVO
-{
-	int key;
-	int value = 0;
+class CounterVO {
+  int? key;
+  int value = 0;
 
-	CounterVO();
+  CounterVO();
 
-	CounterVO.fromRawValue(Map rawObjects) {
-		this.value = rawObjects['value'];
-		this.key = rawObjects['key'];
-	}
+  CounterVO.fromRawValue(Map rawObjects) {
+    this.value = rawObjects['value'];
+    this.key = rawObjects['key'];
+  }
 
-	static Map<String, Object> databaseMapKeyValues(int value) {
-		return { 'value': value };
-	}
+  static Map<String, Object> databaseMapKeyValues(int value) {
+    return {'value': value};
+  }
 }

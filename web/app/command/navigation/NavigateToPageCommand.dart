@@ -5,29 +5,29 @@ import '../../model/NavigationProxy.dart';
 import '../../model/vos/RouteVO.dart';
 
 class NavigateToPageCommand extends SimpleCommand {
-	@override
-	void execute( INotification note ) {
-		final path = note.getType();
-		final isBack = note.getBody();
-		print("> NavigateToPageCommand > route: $path $isBack");
-		final NavigationProxy navigationProxy = facade.retrieveProxy( NavigationProxy.NAME );
+  @override
+  void execute(INotification note) {
+    final path = note.getType()!;
+    final isBack = note.getBody();
+    print("> NavigateToPageCommand > route: $path $isBack");
+    final navigationProxy = facade.retrieveProxy(NavigationProxy.NAME) as NavigationProxy;
 
-		if ( navigationProxy.currentRoute != null ) {
-			if (!isBack) navigationProxy.addToStack( navigationProxy.currentRoute );
+    if (navigationProxy.currentRoute != null) {
+      if (!isBack) navigationProxy.addToStack(navigationProxy.currentRoute!);
 
-			final pageFromMediator = navigationProxy.getCurrentRoutePageMediator();
-			final pageFrom = pageFromMediator.getViewComponent();
-			sendNotification( ApplicationNotification.NAVIGATE_FROM_PAGE, pageFrom );
-			print("> NavigateToPageCommand > facade.removeMediator: ${pageFromMediator.getName()}");
-			facade.removeMediator( pageFromMediator.getName() );
-		}
+      final pageFromMediator = navigationProxy.getCurrentRoutePageMediator();
+      final pageFrom = pageFromMediator!.getViewComponent()!;
+      sendNotification(ApplicationNotification.NAVIGATE_FROM_PAGE, pageFrom);
+      print("> NavigateToPageCommand > facade.removeMediator: ${pageFromMediator.getName()}");
+      facade.removeMediator(pageFromMediator.getName());
+    }
 
-		final pageToMediator = navigationProxy.getPageMediator( path );
-		final pageTo = pageToMediator.getViewComponent();
+    final pageToMediator = navigationProxy.getPageMediator(path);
+    final pageTo = pageToMediator!.getViewComponent();
 
-		facade.registerMediator( pageToMediator );
-		navigationProxy.currentRoute = new RouteVO(0, path);
+    facade.registerMediator(pageToMediator);
+    navigationProxy.currentRoute = RouteVO(0, path);
 
-		sendNotification( ApplicationNotification.NAVIGATE_TO_PAGE, pageTo );
-	}
+    sendNotification(ApplicationNotification.NAVIGATE_TO_PAGE, pageTo);
+  }
 }

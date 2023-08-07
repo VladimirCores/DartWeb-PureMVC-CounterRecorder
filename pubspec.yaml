@@ -5,7 +5,7 @@ description: An absolute bare-bones web app.
 #author: vladimir.minkin <email@example.com>
 
 environment:
-  sdk: '>=2.1.0 <3.0.0'
+  sdk: '^3.0.0'
 
 #dependencies:
 #  path: ^1.4.1
@@ -14,8 +14,9 @@ dependencies:
   framework:
     path: ./framework
 
+  idb_shim: ^2.3.1
+
 dev_dependencies:
-  intl: ^0.15.8
-  build_runner: ^1.1.2
-  build_web_compilers: ^1.0.0
-  pedantic: ^1.0.0
+  intl: ^0.18.1
+  build_runner: ^2.4.6
+  build_web_compilers: ^4.0.5

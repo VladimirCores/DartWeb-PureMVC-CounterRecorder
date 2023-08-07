@@ -13,75 +13,72 @@ import '../../../../consts/types/CounterHistoryAction.dart';
 import '../../../model/vos/CounterVO.dart';
 import '../../components/pages/HomePage.dart';
 
-class HomePageMediator extends Mediator
-{
-	static const String NAME = "HomePageMediator";
+class HomePageMediator extends Mediator {
+  static const String NAME = "HomePageMediator";
 
-	static const String SET_COUNTER = "note_home_screen_mediator_set_counter";
+  static const String SET_COUNTER = "note_home_screen_mediator_set_counter";
 
-	HomePageMediator() : super( NAME );
+  HomePageMediator() : super(NAME);
 
-	StreamSubscription onIncrementButtonPressedSubcription;
-	StreamSubscription onDecrementButtonPressedSubcription;
-	StreamSubscription onNavigateHistoryButtonSubcription;
+  StreamSubscription? onIncrementButtonPressedSubscription;
+  StreamSubscription? onDecrementButtonPressedSubscription;
+  StreamSubscription? onNavigateHistoryButtonSubscription;
 
-	@override
-	void onRegister() {
-		print("> HomePageMediator -> onRegister");
+  @override
+  void onRegister() {
+    print("> HomePageMediator -> onRegister");
 
-		Stream onIncrementButtonPressed = EventStreamProvider<Event>('click').forTarget(_homePage.plusButton);
-		Stream onDecrementButtonPressed = EventStreamProvider<Event>('click').forTarget(_homePage.minusButton);
-		Stream onNavigateHistoryButtonPressed = EventStreamProvider<Event>('click').forTarget(_homePage.navigateButton);
+    Stream onIncrementButtonPressed = EventStreamProvider<Event>('click').forTarget(_homePage.plusButton);
+    Stream onDecrementButtonPressed = EventStreamProvider<Event>('click').forTarget(_homePage.minusButton);
+    Stream onNavigateHistoryButtonPressed = EventStreamProvider<Event>('click').forTarget(_homePage.navigateButton);
 
-		onIncrementButtonPressedSubcription = onIncrementButtonPressed.listen((time) {
-			print("> HomePageMediator -> onIncrementButtonPressed");
-			sendNotification( CounterCommand.INCREMENT );
-			sendNotification( HistoryCommand.SAVE_COUNTER_HISTORY, CounterHistoryAction.INCREMENT );
-		});
-		onDecrementButtonPressedSubcription = onDecrementButtonPressed.listen((time) {
-			print("> HomePageMediator -> onDecrementButtonPressed");
-			sendNotification( CounterCommand.DECREMENT );
-			sendNotification( HistoryCommand.SAVE_COUNTER_HISTORY, CounterHistoryAction.DECREMENT );
-		});
-		onNavigateHistoryButtonSubcription = onNavigateHistoryButtonPressed.listen((event) {
-			print("> HomePageMediator -> onNavigateHistoryButtonPressed");
-			sendNotification( NavigationCommand.NAVIGATE_TO_PAGE, false, Routes.HISTORY_PAGE );
-		});
+    onIncrementButtonPressedSubscription = onIncrementButtonPressed.listen((time) {
+      print("> HomePageMediator -> onIncrementButtonPressed");
+      sendNotification(CounterCommand.INCREMENT);
+      sendNotification(HistoryCommand.SAVE_COUNTER_HISTORY, CounterHistoryAction.INCREMENT);
+    });
+    onDecrementButtonPressedSubscription = onDecrementButtonPressed.listen((time) {
+      print("> HomePageMediator -> onDecrementButtonPressed");
+      sendNotification(CounterCommand.DECREMENT);
+      sendNotification(HistoryCommand.SAVE_COUNTER_HISTORY, CounterHistoryAction.DECREMENT);
+    });
+    onNavigateHistoryButtonSubscription = onNavigateHistoryButtonPressed.listen((event) {
+      print("> HomePageMediator -> onNavigateHistoryButtonPressed");
+      sendNotification(NavigationCommand.NAVIGATE_TO_PAGE, false, Routes.HISTORY_PAGE);
+    });
 
-		this.sendNotification( DataCommand.GET_COUNTER_DATA );
-	}
+    this.sendNotification(DataCommand.GET_COUNTER_DATA);
+  }
 
-	@override
-	void onRemove() {
-		print("> HomePageMediator -> onRemove");
+  @override
+  void onRemove() {
+    print("> HomePageMediator -> onRemove");
 
-		onIncrementButtonPressedSubcription.cancel();
-		onIncrementButtonPressedSubcription = null;
+    onIncrementButtonPressedSubscription!.cancel();
+    onIncrementButtonPressedSubscription = null;
 
-		onDecrementButtonPressedSubcription.cancel();
-		onDecrementButtonPressedSubcription = null;
+    onDecrementButtonPressedSubscription!.cancel();
+    onDecrementButtonPressedSubscription = null;
 
-		onNavigateHistoryButtonSubcription.cancel();
-		onNavigateHistoryButtonSubcription = null;
-	}
+    onNavigateHistoryButtonSubscription!.cancel();
+    onNavigateHistoryButtonSubscription = null;
+  }
 
-	@override
+  @override
   List<String> listNotificationInterests() {
-    return [
-	    CounterNotification.COUNTER_VALUE_UPDATED
-    ];
+    return [CounterNotification.COUNTER_VALUE_UPDATED];
   }
 
   @override
   void handleNotification(INotification note) {
-	  print("> HomePageMediator -> handleNotification: note.name = ${note.getName()}");
-	  print("> HomePageMediator -> handleNotification: note.body = ${note.getBody()}");
-		switch( note.getName() ) {
-			case CounterNotification.COUNTER_VALUE_UPDATED:
-				CounterVO valueVO = note.getBody();
-				_homePage.setCounter( valueVO.value );
-		}
+    print("> HomePageMediator -> handleNotification: note.name = ${note.getName()}");
+    print("> HomePageMediator -> handleNotification: note.body = ${note.getBody()}");
+    switch (note.getName()) {
+      case CounterNotification.COUNTER_VALUE_UPDATED:
+        CounterVO valueVO = note.getBody();
+        _homePage.setCounter(valueVO.value);
+    }
   }
 
-	HomePage get _homePage => getViewComponent() as HomePage;
+  HomePage get _homePage => getViewComponent() as HomePage;
 }

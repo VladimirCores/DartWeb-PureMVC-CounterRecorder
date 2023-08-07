@@ -1,7 +1,6 @@
-class RouteVO
-{
-	final int id;
-	final String path;
+class RouteVO {
+  final int id;
+  final String path;
 
-	RouteVO(this.id, this.path);
+  RouteVO(this.id, this.path);
 }

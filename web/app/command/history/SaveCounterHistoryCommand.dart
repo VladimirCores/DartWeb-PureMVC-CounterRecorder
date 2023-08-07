@@ -17,9 +17,9 @@ class SaveCounterHistoryCommand extends SimpleCommand {
 		print("> SaveCounterHistoryCommand > time: $time");
 		print("> SaveCounterHistoryCommand > type: $type");
 
-		final DatabaseProxy databaseProxy = facade.retrieveProxy( DatabaseProxy.NAME );
-		final CounterProxy counterProxy = facade.retrieveProxy( CounterProxy.NAME );
-		final HistoryProxy historyProxy = facade.retrieveProxy( HistoryProxy.NAME );
+		final databaseProxy = facade.retrieveProxy( DatabaseProxy.NAME ) as DatabaseProxy;
+		final counterProxy = facade.retrieveProxy( CounterProxy.NAME ) as CounterProxy;
+		final historyProxy = facade.retrieveProxy( HistoryProxy.NAME ) as HistoryProxy;
 
 		final CounterVO counterVO = counterProxy.getData() as CounterVO;
 
